@@ -1,6 +1,7 @@
 [build]
+  base = "makemytour"
   command = "npm run build"
-  publish = "out"
+  publish = "makemytour/out"
 
 [[redirects]]
   from = "/*"
