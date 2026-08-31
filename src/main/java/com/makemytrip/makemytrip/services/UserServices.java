@@ -55,4 +55,15 @@ public class UserServices {
         }
         return null;
     }
+
+    public Users updatePreferences(String id, String preferredSeat, String preferredRoomType) {
+        if (id == null) return null;
+        Users user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            if (preferredSeat != null) user.setPreferredSeat(preferredSeat);
+            if (preferredRoomType != null) user.setPreferredRoomType(preferredRoomType);
+            return userRepository.save(user);
+        }
+        return null;
+    }
 }

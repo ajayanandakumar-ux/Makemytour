@@ -16,6 +16,8 @@ public class Users {
     private String password;
     private String role;
     private String phoneNumber;
+    private String preferredSeat;
+    private String preferredRoomType;
     private List<Booking> bookings = new ArrayList<>();
 
     public String getId() {
@@ -74,6 +76,22 @@ public class Users {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getPreferredSeat() {
+        return preferredSeat;
+    }
+
+    public void setPreferredSeat(String preferredSeat) {
+        this.preferredSeat = preferredSeat;
+    }
+
+    public String getPreferredRoomType() {
+        return preferredRoomType;
+    }
+
+    public void setPreferredRoomType(String preferredRoomType) {
+        this.preferredRoomType = preferredRoomType;
+    }
+
     public List<Booking> getBookings() {
         return bookings;
     }
@@ -83,11 +101,41 @@ public class Users {
     }
 
     public static class Booking {
-        private String type;
         private String bookingId;
+        private String itemReferenceId; // Flight or Hotel ID
+        private String type; // "Flight" or "Hotel"
+        private String title; // Flight Name or Hotel Name
         private String date;
         private int quantity;
         private double totalPrice;
+
+        // Cancellation & Refund tracking
+        private String status = "CONFIRMED"; // CONFIRMED, CANCELLED
+        private String cancellationReason;
+        private String cancellationDate;
+        private double refundAmount;
+        private String refundStatus = "NONE"; // NONE, PENDING, PROCESSED, COMPLETED
+        private String expectedRefundTimeline;
+
+        // Seat & Room selection
+        private String selectedSeat;
+        private String selectedRoomType;
+
+        public String getBookingId() {
+            return bookingId;
+        }
+
+        public void setBookingId(String bookingId) {
+            this.bookingId = bookingId;
+        }
+
+        public String getItemReferenceId() {
+            return itemReferenceId;
+        }
+
+        public void setItemReferenceId(String itemReferenceId) {
+            this.itemReferenceId = itemReferenceId;
+        }
 
         public String getType() {
             return type;
@@ -97,12 +145,12 @@ public class Users {
             this.type = type;
         }
 
-        public String getBookingId() {
-            return bookingId;
+        public String getTitle() {
+            return title;
         }
 
-        public void setBookingId(String bookingId) {
-            this.bookingId = bookingId;
+        public void setTitle(String title) {
+            this.title = title;
         }
 
         public String getDate() {
@@ -127,6 +175,70 @@ public class Users {
 
         public void setTotalPrice(double totalPrice) {
             this.totalPrice = totalPrice;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getCancellationReason() {
+            return cancellationReason;
+        }
+
+        public void setCancellationReason(String cancellationReason) {
+            this.cancellationReason = cancellationReason;
+        }
+
+        public String getCancellationDate() {
+            return cancellationDate;
+        }
+
+        public void setCancellationDate(String cancellationDate) {
+            this.cancellationDate = cancellationDate;
+        }
+
+        public double getRefundAmount() {
+            return refundAmount;
+        }
+
+        public void setRefundAmount(double refundAmount) {
+            this.refundAmount = refundAmount;
+        }
+
+        public String getRefundStatus() {
+            return refundStatus;
+        }
+
+        public void setRefundStatus(String refundStatus) {
+            this.refundStatus = refundStatus;
+        }
+
+        public String getExpectedRefundTimeline() {
+            return expectedRefundTimeline;
+        }
+
+        public void setExpectedRefundTimeline(String expectedRefundTimeline) {
+            this.expectedRefundTimeline = expectedRefundTimeline;
+        }
+
+        public String getSelectedSeat() {
+            return selectedSeat;
+        }
+
+        public void setSelectedSeat(String selectedSeat) {
+            this.selectedSeat = selectedSeat;
+        }
+
+        public String getSelectedRoomType() {
+            return selectedRoomType;
+        }
+
+        public void setSelectedRoomType(String selectedRoomType) {
+            this.selectedRoomType = selectedRoomType;
         }
     }
 }

@@ -3,6 +3,9 @@ package com.makemytrip.makemytrip.controllers;
 import com.makemytrip.makemytrip.models.Flight;
 import com.makemytrip.makemytrip.models.Hotel;
 import com.makemytrip.makemytrip.models.Users;
+import com.makemytrip.makemytrip.models.Review;
+import com.makemytrip.makemytrip.models.Users.Booking;
+import com.makemytrip.makemytrip.services.ReviewService;
 import com.makemytrip.makemytrip.repositories.FlightRepository;
 import com.makemytrip.makemytrip.repositories.HotelRepository;
 import com.makemytrip.makemytrip.repositories.UserRepository;
@@ -26,6 +29,9 @@ public class AdminController {
 
     @Autowired
     private FlightRepository flightRepository;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/users")
     public ResponseEntity<List<Users>> getallusers() {
@@ -77,5 +83,47 @@ public class AdminController {
             return ResponseEntity.ok(hotel);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/refunds/{userId}/{bookingId}/status")
+    public ResponseEntity<Booking> updateRefundStatus(
+            @PathVariable String userId,
+            @PathVariable String bookingId,
+            @RequestParam String status) {
+        Optional<Users> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            Users user = userOpt.get();
+            Optional<Booking> bookingOpt = user.getBookings().stream()
+                    .filter(b -> b.getBookingId().equals(bookingId) || (b.getItemReferenceId() != null && b.getItemReferenceId().equals(bookingId)))
+                    .findFirst();
+            if (bookingOpt.isPresent()) {
+                Booking booking = bookingOpt.get();
+                booking.setRefundStatus(status.toUpperCase());
+                if ("COMPLETED".equalsIgnoreCase(status)) {
+                    booking.setExpectedRefundTimeline("Completed - Credited to Account");
+                } else if ("PROCESSED".equalsIgnoreCase(status)) {
+                    booking.setExpectedRefundTimeline("1-2 Business Days");
+                }
+                userRepository.save(user);
+                return ResponseEntity.ok(booking);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/reviews/flagged")
+    public ResponseEntity<List<Review>> getFlaggedReviews() {
+        return ResponseEntity.ok(reviewService.getFlaggedReviews());
+    }
+
+    @PostMapping("/reviews/{reviewId}/approve")
+    public ResponseEntity<Review> approveReview(@PathVariable String reviewId) {
+        return ResponseEntity.ok(reviewService.approveReview(reviewId));
+    }
+
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable String reviewId) {
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.ok().build();
     }
 }

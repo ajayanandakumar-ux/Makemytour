@@ -45,4 +45,16 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping("/preferences")
+    public ResponseEntity<Users> updatePreferences(
+            @RequestParam String userId,
+            @RequestParam(required = false) String preferredSeat,
+            @RequestParam(required = false) String preferredRoomType) {
+        Users user = userServices.updatePreferences(userId, preferredSeat, preferredRoomType);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
